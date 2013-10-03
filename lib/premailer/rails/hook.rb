@@ -18,9 +18,21 @@ class Premailer
         elsif message_contains_html?
           replace_html_part(generate_html_part_replacement)
         end
+
+        remove_premailer_options
+
+        message
       end
 
       private
+      
+      def premailer_options
+        (message["premailer"] && message["premailer"].value) || {}
+      end
+
+      def remove_premailer_options
+        message.header.fields.delete_if { |n| n.name == "premailer" }
+      end
 
       def skip_premailer_header_present?
         message.header[:skip_premailer]
@@ -77,7 +89,7 @@ class Premailer
       end
 
       def premailer
-        @premailer ||= CustomizedPremailer.new(html_part.decoded)
+        @premailer ||= CustomizedPremailer.new(html_part.decoded,premailer_options)
       end
 
       def html_part
