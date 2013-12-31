@@ -30,10 +30,10 @@ class Premailer
         opt = (message["premailer"] && message["premailer"].value)
 
         # evil - but rails 3.2.16+ is turning hash into string
-        if opts && opts.is_a?(String)
-          opts = eval(opts)
+        if opt && opt.is_a?(String)
+          opt = eval(opt)
         end
-        opts || {}
+        opt || {}
       end
 
       def remove_premailer_options
